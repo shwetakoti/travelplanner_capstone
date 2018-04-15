@@ -1,5 +1,5 @@
 const chai = require('chai');
-const chatHttp = require('chai-http');
+const chaiHttp = require('chai-http');
 
 const expect = chai.expect();
 chai.use(chaiHttp);
