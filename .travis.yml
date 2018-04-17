@@ -4,6 +4,6 @@ deploy:
   provider: heroku
   api_key:
     secure: BH6grG4PNCDBd+N8kXxW8pMh4MCDqthSWH4S6/fblZ3Ks9UY/uWyKr2YEgEgysU24NlKOejAy+NsjhQjAW6nlc54LI160/TTuc5qR1fte8Zx2VRT1+JrcEPLqMqwMEora7+gwqmtQ0erZ+tUNXhtwODhJUbx3WF1lpxM2t4Hj4DHM7hBO3rZBCXSE0aIaql7e1adeCwaTQp8iMGJuuvrLBtzI6ifvxhyGo6ZSuxcphCXwakEmF5GT9gM1+9qIYQpbZ6TdqAixbyFvM7/WyE0HTSAddCpt6vHGoQ1rDKNAZ4lLxG23/RtYwqo5s4l6H3UGvOm/ImRyp80Sc2yqMU6N7GDF7RdmIlKstuuxXjxxwQ9ThAtpfaoFBDnFU3DUM1n93sOBUUl56psR1BdJkvWPRq0i2it14ddzTXnSnljw+tYEiUm/frYDBLg5BXOLxIuP3doVH3DkZA+M/bsHriT+hdQ4BDmdE0jsdLMJbEWKmZziwnUSfr7SLX0YVq918EBAvSBjmZ+vfInd5ZcF7tHNBfh3zwX5ML7cDskR7Ypb3MglbyGu4wR+U7rHIJ+CReNh7MNT+Hlbzg3lfjL+beDb6sq3+81Nwmx7HgOM7x53hyHGsdOgzBQn0w+ZhDLeYRKdQNFSeEr8MJ8mUPUgkiAD1cIYVKgskMczsZBZYUN360=
-  app: salty-ridge-93401
+  app: secret-ridge-91587
   on:
     repo: shwetakoti/travelplanner_capstone
