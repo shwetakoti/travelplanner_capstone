@@ -51,12 +51,20 @@ function generateLocationType(){
 function generateRestaurantInfo(){
   const restaurantInfo = [{'resId' : '123456',
   'resName' : 'Pink Door',
+  'resThumb' : 'image1',
+  'resCuisines' : 'cuisine1',
+  'resRating': 'rating1',
+  'resRatingText': 'Good',
   'resUrl' : 'test URL1'},
   {'resId': '678910',
   'resName' : 'Wild Ginger',
-  'resUrl' : 'test URL2'}]
+  'resUrl' : 'test URL2',
+  'resThumb' : 'image2',
+  'resCuisines' : 'cuisine2',
+  'resRating': 'rating2',
+  'resRatingText': 'Excellent'}]
 
-  return restaurantInfo.[Math.floor(Math.random()* restaurantInfo.length)]
+  return restaurantInfo[Math.floor(Math.random()* restaurantInfo.length)];
 }
 
 // generate an object represnting a restaurant.
@@ -174,7 +182,7 @@ describe('Restaurants API resource', function() {
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body).to.include.keys(
-            'userName', 'firstName', 'lastName', 'city', 'locationType', 'restaurantInfo');
+            'userName', 'city', 'locationType', 'restaurantInfo');
           expect(res.body.userName).to.equal(newRestaurant.userName);
           // cause Mongo should have created id on insertion
           expect(res.body.id).to.not.be.null;
@@ -191,37 +199,26 @@ describe('Restaurants API resource', function() {
     //  2. Make a PUT request to update that restaurant
     //  3. Prove restaurant returned by request contains data we sent
     //  4. Prove restaurant in db is correctly updated
-    it('should update fields you send over', function() {
-      const updateData = {
-        resId: 'fofofofofofofof',
-        resUrl: 'futuristic fusion',
-        resName : 'testname'
-      };
-
-      return Restaurant
-        .findOne()
-        .then(function(restaurant) {
-          updateData.id = restaurant.id;
-
-          // make request then inspect it to make sure it reflects
-          // data we sent
-          return chai.request(app)
-            .put(`/viewFavorites/aandrews`)
-            .send(updateData);
-        })
-        .then(function(res) {
-          expect(res).to.have.status(204);
-
-          return Restaurant.findById(updateData.userName);
-        })
-        .then(function(restaurant) {
-          expect(restaurant.userName).to.equal(updateData.userName);
-          expect(restaurant.city).to.equal(updateData.city);
+    it('should update favorites on PUT', function() {
+      return chai.request(app)
+      // first have to get
+      .get('/viewFavorites/aandrews')
+      .then(function( res) {
+        const updatedPost = Object.assign(res.body[0], {
+          resName: 'testrestaurant',
+          resUrl: 'testUrl100'
         });
+        return chai.request(app)
+          .put(`/restaurants/favorites/aandrews`)
+          .send(updatedPost)
+          .then(function(res) {
+            expect(res).to.have.status(204);
+          });
+      });
     });
   });
 
-  describe('DELETE endpoint', function() {
+  /*describe('DELETE endpoint', function() {
     // strategy:
     //  1. get a restaurant
     //  2. make a DELETE request for that restaurant's id
@@ -245,5 +242,6 @@ describe('Restaurants API resource', function() {
           expect(_restaurant).to.be.null;
         });
     });
-  });
+  });*/
+
 });

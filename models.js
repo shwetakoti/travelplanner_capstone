@@ -48,7 +48,8 @@ restaurantSchema.methods.serialize = function()
 }
 
 userSchema.methods.validatePassword = function(password) {
-  return bcrypt.compare(password, this.password);
+  console.log('In models.js:'+password);
+  return bcrypt.compare(password, this.user.password);
 };
 
 userSchema.statics.hashPassword = function(password) {

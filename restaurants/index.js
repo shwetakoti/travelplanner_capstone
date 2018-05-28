@@ -3,5 +3,6 @@
 const {restaurants,users} = require('../models');
 //console.log(restaurants);
 const {router} = require('./router');
+const {localStrategy, jwtStrategy} = require('../auth/strategies');
 
-module.exports = {users, restaurants,router}
+module.exports = {users, restaurants,router,localStrategy,jwtStrategy}

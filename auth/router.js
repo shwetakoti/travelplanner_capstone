@@ -12,9 +12,10 @@ const router = express.Router();
 //const { users } = require('../models');
 const { JWT_SECRET } = require('../config');
 
-const createAuthToken = function(user) {
+const createAuthToken = function(user)
+ {
   console.log('I am in createAuthToken');
-  console.log(user);
+  //console.log(user);
   return jwt.sign({user}, config.JWT_SECRET, {
     subject:  user.userName,
     expiresIn: config.JWT_EXPIRY,
@@ -26,12 +27,34 @@ const localAuth = passport.authenticate('local', {session: false});
 const jsonParser = router.use(bodyParser.json());
 // The user provides a username and password to login
 
-//define function to authenticate username and Password
-router.post('/login',(req,res)=>localAuth,(req,res) => {
-  console.log(req.body);
-  //call the authenticate function here 
-  const authToken = createAuthToken(req.body);
-  res.json({authToken});
+router.post('/login',(req,res,err) => {
+  users.findOne
+  ({
+      'user.userName' : req.body.userName
+   }).then(user => {
+       console.log(user);
+       if(!user)
+       {
+         return Promise.reject({
+            reason: 'LoginError',
+            message: 'Incorrect username or Password'
+         })
+       }
+      return user.validatePassword(req.body.password) ;
+   }).then(isValid => {
+      if(!isValid)
+      {
+        console.log('Invalid password');
+      }
+      else
+       {
+         const authToken = createAuthToken(req.body);
+         res.json(authToken);
+        }
+   }).catch(err => {
+     console.log(err);
+     return res.status(err.code).json(err);
+  })
 });
 
 const jwtAuth = passport.authenticate('jwt', {session: false});

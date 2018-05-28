@@ -9,10 +9,13 @@ let email;
 let password;
 let cityId;
 //let restaurantIds = [];
+let className
 let restaurantInfo = [];
 let favorites = []
-let resId,resName,resUrl;
+let resId,resName,resUrl,resCuisines,resRating,resRatingText,resThumb;
 let userId ;
+let restaurant
+let i;
 
 let counter = 6;
 let startIndex = 0;
@@ -42,28 +45,36 @@ function hotelSubmit()
      $('.js-homepage').html('');
      $('.js-form').html(`
        <form>
-         <div>
-          <p>Please fill in this form to create an account.</p>
-          <label for="fname"><b>First Name<b></label>
-          <input type="text" name="fname" class="js-fname" required>
+         <p><h2>Please fill this form to create an account</h2></p>
+         <div class="signup">
+           <div>
+             <label for="fname"><b>First Name<b></label>
+             <input type="text" name="fname" class="js-fname" required>
+           </div>
           <br>
-          <label for="lname"><b>Last Name<b></label>
-          <input type="text" name="lname" class="js-lname" required>
+          <div>
+            <label for="lname"><b>Last Name<b></label>
+            <input type="text" name="lname" class="js-lname" required>
+          </div>
           <br>
-          <label for="username"><b>Username<b></label>
-          <input type="text" name="username" class="js-username" required>
+          <div>
+            <label for="username"><b>Username<b></label>
+            <input type="text" name="username" class="js-username" required>
+          </div>
           <br>
-          <label for="email"><b>Email</b></label>
-          <input type="text" placeholder="Enter Email" name="email" class="js-email" required>
+          <div>
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="email" class="js-email" required>
+          </div>
           <br>
-          <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="psw" class="js-password" required>
+          <div>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" class="js-password" required>
+          </div>
           <br>
-          <label for="psw-repeat"><b>Repeat Password</b></label>
-          <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
           <br>
-
-          <button type="button" id="cancel" class="js-cancel">Cancel</button>
+          <br>
+          <button type="button" id="cancel" class="js-signup">Cancel</button>
           <button type="button" id="signup" class="js-signup">Sign Up</button>
         </div>
     </form>`)
@@ -79,21 +90,22 @@ function hotelSubmit()
          firstName = $('.js-fname').val();
          lastName = $('.js-lname').val();
          userName = $('.js-username').val();
-         email = $('.js-email').val();
+         email    = $('.js-email').val();
          password = $('.js-password').val();
 
          xhr = new XMLHttpRequest();
          var url = '/restaurants';
          xhr.open("POST", url, true);
          xhr.setRequestHeader("Content-type", "application/json");
+
          xhr.onreadystatechange = function()
         {
           if (xhr.readyState == 4)
           {
-           var user = JSON.parse(xhr.responseText);
+           authToken = JSON.parse(xhr.responseText);
           // var json = xhr.responseText
-           userId = user._id ;
-           console.log(user);
+           //userId = user._id ;
+           console.log(authToken);
            //console.log(user._id);*/
           }
         }
@@ -102,17 +114,24 @@ function hotelSubmit()
          'firstName': `${firstName}`,
          'lastName': `${lastName}`,
          'userName': `${userName}`,
-         'email':`${email}`,
+         'email':     `${email}`,
          'password':`${password}`
        })
        xhr.send(data);
 
-       cityIdSearch();
+      $('.js-form').html('');
+      // $('.js-fav').html(`<p><h2> Welcome ${userName}! Search for restaurants by entering location name and location type </h2></p>`);
+
+     // cityIdSearch();
+      navigationBar();
     }
-    else
+   if(userSubmit=='cancel')
     {
-       $('.js-homepage').html('');
-       $('.js-home').html(`<p>You can sign up later </p>`)
+       console.log('In cancel')
+       //$('.js-homepage').html('');
+       //$('.js-home').html('');
+       $('.js-form').html('');
+       $('.js-form').html(`<p> <h2>No problem! You can sign up later <h2></p>`)
 
     }
    }) //button event
@@ -128,7 +147,7 @@ function hotelSubmit()
     $('.js-form').html(`
       <form>
         <div>
-         <p>Please input your username and password.</p>
+         <p><h2>Enter your username and password</h2></p>
 
           <label for="username"><b>Username<b></label>
           <input type="text" name="username" class="js-username" required>
@@ -171,58 +190,149 @@ function hotelSubmit()
       //console.log(data);
       //xhr.send(data);
       xhr.send(data);
-      cityIdSearch();
+      navigationBar();
+
+      //cityIdSearch();
    })//buttonclick
   }//else
 }//redirectUse
 
+function navigationBar()
+{
+
+  $('.js-form').html('');
+  $('.js-nav').html(`<p><h2> Welcome ${userName}! You can search for restaurants or view your current favorites</h2></p>
+
+  <div class="tab">
+     <button class="tablinks" id = "home">Logout</button>
+     <button class="tablinks" id = "search">Restaurant Search</button>
+     <button class="tablinks" id = "favorites">View Favorites</button>
+  </div>
+ `);
+
+ $('#home').click(function(event)
+ {
+   event.preventDefault();
+
+   $('.js-search-results-0').html('');
+   $('.js-search-results-1').html('');
+   $('.js-search-results-2').html('');
+
+   $(className).html('');
+   $('.js-nav').html('');
+   $('.js-form').html('');
+   $('.js-homepage').html(`<div class="js-homepage homepage">
+      <h3>Are you hungry and are not sure where to eat?Look no further!<br>
+       Begin your search by either signing in or signing up
+     </h3>
+
+      <form class="js-homepage">
+        <button id="new" role="button" type="submit">Sign Up</button>
+        <button id="existing" role="button"  type="submit">Sign In</button>
+      </form>
+  </div>`)
+})
+
+
+ $('#search').click(function(event)
+ {
+   event.preventDefault();
+
+   $('.js-search-results-0').html('');
+   $('.js-search-results-1').html('');
+   $('.js-search-results-2').html('');
+
+   $(className).html('');
+   cityIdSearch();
+ })
+
+ $('#favorites').click(function(event)
+ {
+   event.preventDefault();
+
+   $('.js-search-results-0').html('');
+   $('.js-search-results-1').html('');
+   $('.js-search-results-2').html('');
+   
+   $(className).html('');
+
+   //make a get request to restaurants to get a list of all selected restaurants
+   console.log('In favorites list');
+
+   xhr = new XMLHttpRequest();
+   var url = '/restaurants/viewfavorites/'+`${userName}`
+   console.log(authToken);
+
+   //var url = '/api/protected'
+   xhr.open("GET", url, true);
+   xhr.setRequestHeader("Content-type", "application/json");
+   xhr.setRequestHeader("Authorization", 'Bearer '+ `${authToken}`)
+   xhr.onreadystatechange = function()
+   {
+     if (xhr.readyState == 4)
+     {
+      restaurant = JSON.parse(xhr.responseText);
+      console.log(restaurant.restaurantInfo);
+
+      restaurant.restaurantInfo.forEach((fav,i) =>
+      {
+         var column = Math.floor(i/2);
+         className = '.js-search-results-'+column;
+        // console.log('this is column'+column);
+         //'.js-search-results-1';
+         console.log(fav.resName)
+
+         $('.js-form').html('');
+
+        // $(className).html('');
+         $(className).append(
+           `<div class="favorites">
+            <br>
+             <ul>
+              <h2>${fav.resName}</h2>
+              <a href="${fav.resUrl}" target="_blank"><img src="${fav.resThumb}" target="_blank"</img></a>
+              <h5>${fav.resCuisines}</h5>
+              <h5>${fav.resRating}</h5>
+              <h5>${fav.resRatingText}</h5>
+              <a href="${fav.resUrl}" target="_blank"><h5>More Info</h5></a>
+           </ul>
+           </div>
+          </div>`
+          );
+      }) //.each
+     }
+   }
+   xhr.send();
+ })
+
+} //navigationbar
+
 function cityIdSearch()
  {
     console.log('in restaurant search');
-    $('.js-form').html('');
+   //  $('.js-fav').html('');
     $('.js-form').html(`
-      <form class="js-locationForm">
-        <p> Welcome!Please enter your location details:</p>
-        <label for="city"><b>City<b></label>
-        <input type="text" name="city" class="js-city" required>
+       <form class="js-locationForm location">
+
+         <label for="city"><b>Enter City  <b></label>
+         <input type="text" name="city" class="js-city">
+         <br>
+         <label><b>Location Type</label>
+         <select id="location">
+             <option value="city">City</option>
+             <option value="subzone">Subzone</option>
+             <option value="zone">Zone</option>
+             <option value="landmark">Landmark</option>
+             <option value="metro">Metro</option>
+             <option value="group">Group</option>
+        </select>
         <br>
-        <p>Select Entity Type</p>
-        <input class="js-radio" type="radio" name="option" id="option1" value="city" role="button" aria-pressed="false"><label for="option1">City</label></div><br>
-        <input class="js-radio" type="radio" name="option" id="option2" value="subzone" role="button" aria-pressed="false"><label for="option2">Subzone</label></div><br>
-        <input class="js-radio" type="radio" name="option" id="option3" value="zone" role="button" aria-pressed="false"><label for="option3">Zone</label></div><br>
-        <input class="js-radio" type="radio" name="option" id="option4" value="landmark" role="button" aria-pressed="false"><label for="option4">Landmark</label></div><br>
-        <input class="js-radio" type="radio" name="option" id="option5" value="metro" role="button" aria-pressed="false"><label for="option5">Metro</label></div><br>
-        <input class="js-radio" type="radio" name="option" id="option6" value="group" role="button" aria-pressed="false"><label for="option6">Group</label></div><br>
         <br>
         <input type="submit" id="submit" class="js-submit"></input>
         <br>
         <br>
-        </form>`)
-      $('.js-view').html(`<br><br><button id="view" role="button" type="submit">View Favorites</button>`) ;
-
-      /*make a GET request to fetch all favorite restaurants*/
-
-      $('.js-view').on('click','#view',function(event)
-      {
-        event.preventDefault();
-        //make a get request to restaurants to get a list of all selected restaurants
-        console.log('In favorites list');
-
-        xhr = new XMLHttpRequest();
-        var url = '/restaurants/viewfavorites/'+`${userName}`
-        //var url = '/restaurants/`${userId}`'
-        xhr.open("GET", url, true);
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.onreadystatechange = function()
-        {
-          if (xhr.readyState == 4)
-          {
-           var restaurant = xhr.responseText;
-           console.log(restaurant);
-          }
-        }
-        xhr.send();
-      })
+        </form>
+      `)
 
       $('.js-locationForm').submit(event =>
       {
@@ -230,7 +340,7 @@ function cityIdSearch()
         console.log('I am inside restaurantsearch/location')
         const queryTarget = $(event.currentTarget).find('.js-city');
         city = queryTarget.val();
-        entity = $("input[class='js-radio']:checked").val();
+        entity = $("#location").val();
         // clear out the input
         console.log(`${entity}`);
         queryTarget.val("");
@@ -307,31 +417,53 @@ function displayData(data)
   console.log(data);
   data.restaurants.forEach(restaurant =>
   {
-    resName= `${restaurant.restaurant.name}`;
+    resName = `${restaurant.restaurant.name}`;
     resUrl = `${restaurant.restaurant.url}`;
     resId = `${restaurant.restaurant.R.res_id}`;
+    resThumb = `${restaurant.restaurant.thumb}`;
+    resCuisines = `${restaurant.restaurant.cuisines}`;
+    resRating = `${restaurant.restaurant.user_rating.aggregate_rating}`;
+    resRatingText = `${restaurant.restaurant.user_rating.rating_text}` ;
+
+    console.log('Inside displaydata');
+    console.log(resThumb);
+    console.log(restaurant.restaurant.cuisines);
 
     restaurantInfo.push({
        resId : `${resId}`,
        resName : `${resName}`,
-       resUrl : `${resUrl}`
+       resUrl : `${resUrl}`,
+       resThumb : `${resThumb}` ,
+       resCuisines : `${resCuisines}`,
+       resRating : `${resRating}`,
+       resRatingText : `${resRatingText}` ,
     })
   })
-   console.log(restaurantInfo);
+
+
 
   $.each(data.restaurants,function(i,restaurant)
   {
      var column = Math.floor(i/2);
      console.log('this is column'+column);
      var className = '.js-search-results-'+column;
+     console.log(restaurant.restaurant.thumb);
+     console.log(restaurant.restaurant.cuisines);
+     console.log(restaurant.restaurant.user_rating.aggregate_rating);
+     console.log(restaurant.restaurant.user_rating.rating_text);
+
 
      $(className).append(
       ` <div>
           <br>
           <ul>
-            <p>${restaurant.restaurant.name}</p>
-            <p>${restaurant.restaurant.url}</p>
-            <button type="button" id="${restaurant.restaurant.R.res_id}" class="js-favorite">Mark as Favorite!</button>
+            <h2>${restaurant.restaurant.name}</h2>
+            <a href="${restaurant.restaurant.url}" target="_blank"><img src="${restaurant.restaurant.thumb}" target="_blank"</img></a>
+            <h5>${restaurant.restaurant.cuisines}</h5>
+            <h5>${restaurant.restaurant.user_rating.aggregate_rating}</h5>
+            <h5>${restaurant.restaurant.user_rating.rating_text}</h5>
+            <a href="${restaurant.restaurant.url}" target="_blank"><h5>More Info</h5></a>
+            <button type="button" id="${restaurant.restaurant.R.res_id}" class="js-favorite"> Mark as Favorite!</button>
           </ul>
         </div>
       `);
@@ -346,19 +478,23 @@ function displayData(data)
 
         if(favorites.length==0)
        {
-           console.log('first favorite restaurant');
+          console.log('first favorite restaurant');
 
            restaurantInfo.forEach(restaurant =>
            {
              if(favorite == restaurant.resId)
              {
-               favorites.push(
+                favorites.push(
                  {
                    resId : restaurant.resId,
                    resName : restaurant.resName,
+                   resThumb : restaurant.resThumb,
+                   resCuisines : restaurant.resCuisines,
+                   resRating : restaurant.resRating,
+                   resRatingText : restaurant.resRatingText ,
                    resUrl : restaurant.resUrl
                  })
-             }
+              }
            })
 
             console.log(favorites);
@@ -369,6 +505,7 @@ function displayData(data)
             //var url = '/restaurants/`${userId}`';
             xhr.open("POST", url, true);
             xhr.setRequestHeader("Content-type", "application/json");
+          //  xhr.setRequestHeader("Authorization", 'Bearer '+ `${authToken}`)
             xhr.onreadystatechange = function()
             {
               if (xhr.readyState == 4)
@@ -401,6 +538,10 @@ function displayData(data)
                 {
                   resId : restaurant.resId,
                   resName : restaurant.resName,
+                  resThumb : restaurant.resThumb,
+                  resCuisines : restaurant.resCuisines,
+                  resRating : restaurant.resRating,
+                  resRatingText : restaurant.resRatingText ,
                   resUrl : restaurant.resUrl
                 })
              }
@@ -412,6 +553,7 @@ function displayData(data)
           var url = '/restaurants/favorites/'+`${userId}`;
           xhr.open("PUT", url, true);
           xhr.setRequestHeader("Content-type", "application/json");
+        //  xhr.setRequestHeader("Authorization", 'Bearer '+ `${authToken}`)
           xhr.onreadystatechange = function()
           {
             if (xhr.readyState == 4)
@@ -439,6 +581,7 @@ function displayData(data)
     if(startIndex > 0)
      {
        $('.js-prev').html(`<br><br><button id="prev" role="button" type="submit">Previous</button>`)
+      /// $('.js-view').html(`<br><br><button id="view" role="button" type="submit">View Favorites</button>`) ;
      }
 
    //Each page will have a 'Next' button

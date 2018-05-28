@@ -1,0 +1,122 @@
+body * {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+.tab {
+    overflow: hidden;
+    /*border: 1px solid #ccc;*/
+    width: 750px;
+    /*background-color: #f1f1f1;*/
+    position: relative;
+    margin-left:50px;
+    margin-top:60px;
+    display: inline-block;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    position: relative;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+body {
+  background: url(http://www.trollfacequest4.net/p/2018/03/restaurant-menu-background-11-background-check-all-with-restaurant-menu-background.jpg) no-repeat;
+  background-size: cover;
+  color: black;
+  text-align: center;
+ }
+
+input {
+  height: 30px;
+  width:  200px;
+  font-size: 18px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 8px 0;
+  margin-left:10px;
+  position:relative;
+}
+
+select {
+  height: 30px;
+  width:  200px;
+  font-size: 18px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 8px 0;
+  margin-left:2px;
+
+}
+
+label {
+  width: 100px;
+}
+
+.signup {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    height: 400px;
+    width:  300px;
+    text-align: center;
+    display: inline-block;
+    margin: 8px 0;
+}
+
+form {
+  height: 500px;
+  width : 500px;
+  display: inline-block;
+  margin-top: 75px;
+
+}
+
+button {
+  height: 40px ;
+  font-size: 18px;
+  font-weight: bolder;
+  border-radius: 4px;
+}
+
+.favorites {
+
+  position:relative;
+  display : inline-block;
+  text-align: center;
+  margin : auto;
+  margin-left :150px;
+}
+
+h3 {
+ margin-top:50px
+}
+
+a {
+  color: #0000FF;
+}
+
+.prev-restaurants, .next-restaurants{
+  float :left;
+  border-radius: 8px;
+  margin-right: 25px;
+  border-radius: 8px;
+}
+
+.nav-buttons{
+  float :right;
+  display:inline-block;
+}
+.hover:hover{
+  background-color:#E9967A;
+}

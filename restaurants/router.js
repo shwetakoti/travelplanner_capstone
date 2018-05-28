@@ -4,13 +4,27 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const router = express.Router();
 const jsonParser = bodyParser.json();
-//const user = require('./models');
-//const restaurant = require('./models')
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 const {restaurants,users} = require('../models');
+const { JWT_SECRET } = require('../config');
 
+const jwtAuth = passport.authenticate('jwt', {session: false});
+
+const createAuthToken = function(user)
+ {
+  console.log('I am in createAuthToken');
+  //console.log(user);
+  return jwt.sign({user}, config.JWT_SECRET, {
+    subject:  user.userName,
+    expiresIn: config.JWT_EXPIRY,
+    algorithm: 'HS256'
+  });
+};
 // Post to register a new user
-router.post('/', jsonParser, (req, res) => {
+router.post('/', jsonParser,(req, res) => {
   console.log(req.body);
   const requiredFields = ['userName', 'password'];
   const missingField = requiredFields.find(field => !(field in req.body));
@@ -96,7 +110,8 @@ let {firstName = '',lastName = '',userName,email = '', password} = req.body;
     })
     .then(user => {
       console.log("In user.serialize()"+ user.serialize());
-      return res.status(201).json(user);
+      const authToken = createAuthToken(req.body);
+      return res.status(201).json(authToken);
     })
     .catch(err => {
       // Forward validation errors on to the client, otherwise give a 500
@@ -123,7 +138,11 @@ let {firstName = '',lastName = '',userName,email = '', password} = req.body;
 
 //restaurants endpoints
 //GET request to get restaurantIds based on userId
-router.get('/viewfavorites/:userName',jsonParser,(req,res) =>
+
+//const jwtAuth = passport.authenticate('jwt', {session: false});
+
+
+router.get('/viewfavorites/:userName',jsonParser,jwtAuth,(req,res) =>
 {
    console.log("In viewFavorites:"+ req.params.userName);
    restaurants.findOne(

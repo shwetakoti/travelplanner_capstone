@@ -31,7 +31,7 @@ const localStrategy = new LocalStrategy({
   let user;
   console.log(userName);
   users.findOne({
-      'userName': userName
+      'user.userName': userName
    }).then(_user => {
       console.log(_user);
       user = _user;
@@ -64,6 +64,7 @@ const localStrategy = new LocalStrategy({
 
 const jwtStrategy = new JwtStrategy(
   {
+    //console.log("in JWTstrategy");
     secretOrKey: JWT_SECRET,
     // Look for the JWT as a Bearer auth header
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
