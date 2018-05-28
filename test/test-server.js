@@ -165,6 +165,7 @@ describe('Restaurants API resource', function() {
           expect(resRestaurant.borough).to.equal(restaurant.restaurantInfo);
     });
   });
+});
 
   describe('POST endpoint', function() {
     // strategy: make a POST request with data,
@@ -217,31 +218,3 @@ describe('Restaurants API resource', function() {
       });
     });
   });
-
-  /*describe('DELETE endpoint', function() {
-    // strategy:
-    //  1. get a restaurant
-    //  2. make a DELETE request for that restaurant's id
-    //  3. assert that response has right status code
-    //  4. prove that restaurant with the id doesn't exist in db anymore
-    it('delete a restaurant by id', function() {
-
-      let restaurant;
-
-      return Restaurant
-        .findOne()
-        .then(function(_restaurant) {
-          restaurant = _restaurant;
-          return chai.request(app).delete(`/restaurants/${restaurant.id}`);
-        })
-        .then(function(res) {
-          expect(res).to.have.status(204);
-          return Restaurant.findById(restaurant.id);
-        })
-        .then(function(_restaurant) {
-          expect(_restaurant).to.be.null;
-        });
-    });
-  });*/
-
-});
