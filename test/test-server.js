@@ -13,6 +13,8 @@ const {users,restaurants} = require('../models');
 const {app, runServer, closeServer} = require('../server');
 const {TEST_DATABASE_URL} = require('../config');
 
+let userName;
+
 chai.use(chaiHttp);
 
 // used to put randomish documents in db
@@ -31,9 +33,12 @@ function seedRestaurantData() {
 
 // used to generate data to put in db
 function generateUserName() {
+
   const userNames = [
     'aandrews', 'bcooper', 'vlodge', 'jjones', 'skoti'];
-  return userNames[Math.floor(Math.random() * userIds.length)];
+     userName = userNames[0];
+    //console.log(userName);
+  return userNames[Math.floor(Math.random() * userNames.length)];
 }
 
 // used to generate data to put in db
@@ -103,9 +108,9 @@ describe('Restaurants API resource', function() {
     return seedRestaurantData();
   });
 
-  afterEach(function(){
-    return tearDownDb();
-  });
+/*  afterEach(function(){
+   return tearDownDb();
+ });*/
 
   after(function(){
     return closeServer();
@@ -114,58 +119,7 @@ describe('Restaurants API resource', function() {
   // note the use of nested `describe` blocks.
   // this allows us to make clearer, more discrete tests that focus
   // on proving something small
-  describe('GET endpoint', function() {
 
-    it('should return all favorites', function() {
-      // strategy:
-      //    1. get back all favorite restaurants info returned by by GET request to `/viewFavorites/aandrews`
-      //    2. prove res has right status, data type
-      //    3. prove the number of restaurants we got back is equal to number
-      //       in db.
-      //
-      // need to have access to mutate and access `res` across
-      // `.then()` calls below, so declare it here so can modify in place
-      let res;
-      return chai.request(app)
-        .get('/viewFavorites/aandrews')
-        .then(function(_res) {
-          // so subsequent .then blocks can access response object
-          res = _res;
-          expect(res).to.have.status(200);
-          // otherwise our db seeding didn't work
-          expect(res.body.restaurants).to.have.lengthOf.at.least(1);
-          return Restaurant.count();
-        })
-    });
-   it('should return restaurants with right fields', function() {
-      // Strategy: Get back all restaurants, and ensure they have expected keys
-
-      let resRestaurant;
-      return chai.request(app)
-        .get('/viewFavorites/aandrews')
-        .then(function(res) {
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          expect(res.body.restaurants).to.be.a('array');
-          expect(res.body.restaurants).to.have.lengthOf.at.least(1);
-
-          res.body.restaurants.forEach(function(restaurant) {
-            expect(restaurant).to.be.a('object');
-            expect(restaurant).to.include.keys(
-              'userName','city','locationType','restaurantInfo');
-          });
-          resRestaurant = res.body.restaurants[0];
-          return Restaurant.findById(resRestaurant.id);
-        })
-        .then(function(restaurant) {
-
-          expect(resRestaurant.id).to.equal(restaurant.userName);
-          expect(resRestaurant.name).to.equal(restaurant.city);
-          expect(resRestaurant.cuisine).to.equal(restaurant.locationType);
-          expect(resRestaurant.borough).to.equal(restaurant.restaurantInfo);
-    });
-  });
-});
 
   describe('POST endpoint', function() {
     // strategy: make a POST request with data,
@@ -176,14 +130,13 @@ describe('Restaurants API resource', function() {
 
       const newRestaurant = generateRestaurantData();
        return chai.request(app)
-        .post('/favorites')
+        .post('/restaurants/favorites')
         .send(newRestaurant)
         .then(function(res) {
-          expect(res).to.have.status(201);
+         expect(res).to.have.status(201);
+        // console.log(res.body);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.include.keys(
-            'userName', 'city', 'locationType', 'restaurantInfo');
           expect(res.body.userName).to.equal(newRestaurant.userName);
           // cause Mongo should have created id on insertion
           expect(res.body.id).to.not.be.null;
@@ -192,6 +145,35 @@ describe('Restaurants API resource', function() {
         })
      });
   });
+
+  describe('GET endpoint', function() {
+
+    it('should return all favorites', function() {
+
+    //const newRestaurant = generateRestaurantData();
+     const newRestaurant = generateRestaurantData();
+     return chai.request(app)
+      .post('/restaurants/favorites')
+      .send(newRestaurant);
+
+      return chai.request(app)
+      .get('/restaurants/viewFavorites/'+ `${userName}`)
+      .then(function(res) {
+       expect(res).to.have.status(200);
+       expect(res).to.be.json;
+       expect(res.body).to.be.a('array');
+      // console.log(res.body);
+        expect(res.body.length).to.be.above(0);
+        res.body.forEach(function(item) {
+          expect(item).to.be.a('object');
+          expect(item).to.have.all.keys(
+            'userName', 'city', 'locationType', 'restaurantInfo')
+          });
+        });
+      });
+    });
+
+
 
   describe('PUT endpoint', function() {
 
@@ -203,14 +185,15 @@ describe('Restaurants API resource', function() {
     it('should update favorites on PUT', function() {
       return chai.request(app)
       // first have to get
-      .get('/viewFavorites/aandrews')
+      console.log(userNames[0])
+      .get('/restaurants/viewFavorites/'+ `${userName}`)
       .then(function( res) {
         const updatedPost = Object.assign(res.body[0], {
           resName: 'testrestaurant',
           resUrl: 'testUrl100'
         });
         return chai.request(app)
-          .put(`/restaurants/favorites/aandrews`)
+          .put('/restaurants/favorites/'+`${userName}`)
           .send(updatedPost)
           .then(function(res) {
             expect(res).to.have.status(204);
@@ -218,3 +201,4 @@ describe('Restaurants API resource', function() {
       });
     });
   });
+});
