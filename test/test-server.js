@@ -37,7 +37,7 @@ function generateUserName() {
   const userNames = [
     'aandrews', 'bcooper', 'vlodge', 'jjones', 'skoti'];
      userName = userNames[0];
-    //console.log(userName);
+
   return userNames[Math.floor(Math.random() * userNames.length)];
 }
 
@@ -108,17 +108,11 @@ describe('Restaurants API resource', function() {
     return seedRestaurantData();
   });
 
-/*  afterEach(function(){
-   return tearDownDb();
- });*/
 
   after(function(){
     return closeServer();
   });
 
-  // note the use of nested `describe` blocks.
-  // this allows us to make clearer, more discrete tests that focus
-  // on proving something small
 
 
   describe('POST endpoint', function() {
@@ -134,7 +128,6 @@ describe('Restaurants API resource', function() {
         .send(newRestaurant)
         .then(function(res) {
          expect(res).to.have.status(201);
-        // console.log(res.body);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
           expect(res.body.userName).to.equal(newRestaurant.userName);
@@ -149,8 +142,6 @@ describe('Restaurants API resource', function() {
   describe('GET endpoint', function() {
 
     it('should return all favorites', function() {
-
-    //const newRestaurant = generateRestaurantData();
      const newRestaurant = generateRestaurantData();
      return chai.request(app)
       .post('/restaurants/favorites')
@@ -162,8 +153,7 @@ describe('Restaurants API resource', function() {
        expect(res).to.have.status(200);
        expect(res).to.be.json;
        expect(res.body).to.be.a('array');
-      // console.log(res.body);
-        expect(res.body.length).to.be.above(0);
+       expect(res.body.length).to.be.above(0);
         res.body.forEach(function(item) {
           expect(item).to.be.a('object');
           expect(item).to.have.all.keys(

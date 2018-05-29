@@ -8,7 +8,6 @@ let userName;
 let email;
 let password;
 let cityId;
-//let restaurantIds = [];
 let className
 let restaurantInfo = [];
 let favorites = []
@@ -31,15 +30,14 @@ function hotelSubmit()
     userType = $(event.currentTarget).attr('id');
     console.log(`${userType}`);
 
-    /*if userType is new, then redirect them to signuppage
-    else, redriect them to search page*/
+    /*redirectUser function checks if user is new or existing user and based on that makes request to endpoints*/
     redirectUser(userType);
    })
  }//hotelSubmit
 
  function redirectUser(userType)
  {
-   console.log('in redirect User function');
+   /*If user is new,then redirect them to signup form page, otherwise redirect them to login form page*/
    if(userType == 'new')
    {
      $('.js-homepage').html('');
@@ -103,10 +101,7 @@ function hotelSubmit()
           if (xhr.readyState == 4)
           {
            authToken = JSON.parse(xhr.responseText);
-          // var json = xhr.responseText
-           //userId = user._id ;
-           console.log(authToken);
-           //console.log(user._id);*/
+          // console.log(authToken);
           }
         }
        var data = JSON.stringify(
@@ -120,29 +115,19 @@ function hotelSubmit()
        xhr.send(data);
 
       $('.js-form').html('');
-      // $('.js-fav').html(`<p><h2> Welcome ${userName}! Search for restaurants by entering location name and location type </h2></p>`);
-
-     // cityIdSearch();
-      navigationBar();
+        navigationBar();
     }
    if(userSubmit=='cancel')
     {
        console.log('In cancel')
-       //$('.js-homepage').html('');
-       //$('.js-home').html('');
        $('.js-form').html('');
        $('.js-form').html(`<p> <h2>No problem! You can sign up later <h2></p>`)
 
     }
    }) //button event
-
-    /*capture user details and store it in database*/
-    /*$.post('/restaurants','{firstname:'',lastname:'',city:'',...}')*/
   }//if new user
   else
-  {
-    //cityIdSearch();
-    /*make a GET request to get existing user's userid*/
+  { /*login form*/
     $('.js-homepage').html('');
     $('.js-form').html(`
       <form>
@@ -170,6 +155,7 @@ function hotelSubmit()
       userName = $('.js-username').val();
       password = $('.js-password').val();
 
+      /*Make a post request to post username and password*/
       xhr = new XMLHttpRequest();
       var url = '/api/auth/login';
       xhr.open("POST", url, true);
@@ -187,8 +173,7 @@ function hotelSubmit()
           'userName':`${userName}`,
           'password':`${password}`
         })
-      //console.log(data);
-      //xhr.send(data);
+
       xhr.send(data);
       navigationBar();
 
@@ -199,7 +184,7 @@ function hotelSubmit()
 
 function navigationBar()
 {
-
+/*New or existing users can navigate between logout, restaurant search and view favorites page*/
   $('.js-form').html('');
   $('.js-nav').html(`<p><h2> Welcome ${userName}! You can search for restaurants or view your current favorites</h2></p>
 
@@ -217,7 +202,7 @@ function navigationBar()
    $('.js-search-results-0').html('');
    $('.js-search-results-1').html('');
    $('.js-search-results-2').html('');
-
+   $('.js-next').html('');
    $(className).html('');
    $('.js-nav').html('');
    $('.js-form').html('');
@@ -241,7 +226,7 @@ function navigationBar()
    $('.js-search-results-0').html('');
    $('.js-search-results-1').html('');
    $('.js-search-results-2').html('');
-
+    $('.js-next').html('');
    $(className).html('');
    cityIdSearch();
  })
@@ -253,17 +238,13 @@ function navigationBar()
    $('.js-search-results-0').html('');
    $('.js-search-results-1').html('');
    $('.js-search-results-2').html('');
-   
-   $(className).html('');
 
-   //make a get request to restaurants to get a list of all selected restaurants
-   console.log('In favorites list');
+   $(className).html('');
 
    xhr = new XMLHttpRequest();
    var url = '/restaurants/viewfavorites/'+`${userName}`
    console.log(authToken);
 
-   //var url = '/api/protected'
    xhr.open("GET", url, true);
    xhr.setRequestHeader("Content-type", "application/json");
    xhr.setRequestHeader("Authorization", 'Bearer '+ `${authToken}`)
@@ -278,13 +259,8 @@ function navigationBar()
       {
          var column = Math.floor(i/2);
          className = '.js-search-results-'+column;
-        // console.log('this is column'+column);
-         //'.js-search-results-1';
-         console.log(fav.resName)
 
          $('.js-form').html('');
-
-        // $(className).html('');
          $(className).append(
            `<div class="favorites">
             <br>
@@ -310,7 +286,7 @@ function navigationBar()
 function cityIdSearch()
  {
     console.log('in restaurant search');
-   //  $('.js-fav').html('');
+
     $('.js-form').html(`
        <form class="js-locationForm location">
 
@@ -347,7 +323,7 @@ function cityIdSearch()
         const settings =
          {
         	 url: 'https://developers.zomato.com/api/v2.1/cities',
-           /*url: 'https://developers.zomato.com/api/v2.1/collections',*/
+
            headers:
            {
              "user-key":'cba9c1eb99c74720b299dc97c499bacd'
@@ -375,7 +351,6 @@ function cityIdSearch()
          }
          $.ajax(settings);
 
-      /*   console.log(`${settings}`);*/
       })
 
 }
@@ -385,7 +360,7 @@ function restaurantSearch(cityId)
   const settings =
    {
      url: 'https://developers.zomato.com/api/v2.1/search',
-     /*url: 'https://developers.zomato.com/api/v2.1/collections',*/
+
      headers:
      {
        "user-key":'cba9c1eb99c74720b299dc97c499bacd'
@@ -410,6 +385,7 @@ function displayData(data)
 {
   $('.js-form').html('');
   $('.js-view').html('');
+  $('.js-next').html('');
   $('.js-search-results-0').html('');
   $('.js-search-results-1').html('');
   $('.js-search-results-2').html('');
@@ -473,9 +449,6 @@ function displayData(data)
     $('.js-favorite').on('click',function(event)
     {
         var favorite = $(event.currentTarget).attr('id');
-        //if(restaurantIds.length==0)
-        console.log(favorite);
-
         if(favorites.length==0)
        {
           console.log('first favorite restaurant');
@@ -496,23 +469,15 @@ function displayData(data)
                  })
               }
            })
-
-            console.log(favorites);
-
-           //restaurantIds.push(favorite);
             xhr = new XMLHttpRequest();
             var url = '/restaurants/favorites';
-            //var url = '/restaurants/`${userId}`';
             xhr.open("POST", url, true);
             xhr.setRequestHeader("Content-type", "application/json");
-          //  xhr.setRequestHeader("Authorization", 'Bearer '+ `${authToken}`)
             xhr.onreadystatechange = function()
             {
               if (xhr.readyState == 4)
               {
                 var json = JSON.parse(xhr.responseText);
-            // var json = xhr.responseText
-                console.log(json);
               }
             }
            var data = JSON.stringify(
@@ -528,7 +493,6 @@ function displayData(data)
        else
        {
           console.log('Not first favorite restaurant');
-          //restaurantIds.push(favorite);
 
           restaurantInfo.forEach(restaurant =>
           {
@@ -553,19 +517,16 @@ function displayData(data)
           var url = '/restaurants/favorites/'+`${userId}`;
           xhr.open("PUT", url, true);
           xhr.setRequestHeader("Content-type", "application/json");
-        //  xhr.setRequestHeader("Authorization", 'Bearer '+ `${authToken}`)
           xhr.onreadystatechange = function()
           {
             if (xhr.readyState == 4)
             {
-              //var json = JSON.parse(xhr.responseText);
               var json = xhr.responseText;
-              console.log(json);
+
             }
           }
          var data = JSON.stringify(
          {
-          // 'userId' : `${userId}`,
            'userName' : `${userName}`,
            'city':`${city}`,
            'locationType':`${entity}`,
@@ -659,5 +620,5 @@ function prevResultSet()
   console.log('In prevResultSet');
   console.log(settings);
 }
-
+//callback function to start the app
 $(hotelSubmit);
