@@ -5,9 +5,7 @@ body * {
 
 .tab {
     overflow: hidden;
-    /*border: 1px solid #ccc;*/
     width: 750px;
-    /*background-color: #f1f1f1;*/
     position: relative;
     margin-left:50px;
     margin-top:60px;
@@ -19,7 +17,7 @@ body * {
     background-color: inherit;
     border: none;
     outline: none;
-    position: relative;
+    position:relative;
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
@@ -29,6 +27,25 @@ body * {
 /* Change background color of buttons on hover */
 .tab button:hover {
     background-color: #ddd;
+}
+
+.like-btn {
+    position: absolute;
+    display: inline-block;
+    background:url(twitter-heart.png);
+    width: 60px;
+    height: 60px;
+    background-size: 2900%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.fav {
+  font-size: 25px;
+}
+
+.fav-on {
+  background-color: #E9967A;
 }
 
 body {
@@ -79,7 +96,12 @@ form {
   width : 500px;
   display: inline-block;
   margin-top: 75px;
+}
 
+h3{
+  text-align:center;
+  margin-left:75px;
+  position:relative;
 }
 
 button {
@@ -90,7 +112,6 @@ button {
 }
 
 .favorites {
-
   position:relative;
   display : inline-block;
   text-align: center;

@@ -47,17 +47,17 @@ function hotelSubmit()
          <div class="signup">
            <div>
              <label for="fname"><b>First Name<b></label>
-             <input type="text" name="fname" class="js-fname" required>
+             <input type="text"  placeholder="Enter Firstname" name="fname" class="js-fname" required>
+           </div>
+          <br>
+           <div>
+            <label for="lname"><b>Last Name<b></label>
+            <input type="text" placeholder="Enter Lastname" name="lname" class="js-lname" required>
            </div>
           <br>
           <div>
-            <label for="lname"><b>Last Name<b></label>
-            <input type="text" name="lname" class="js-lname" required>
-          </div>
-          <br>
-          <div>
             <label for="username"><b>Username<b></label>
-            <input type="text" name="username" class="js-username" required>
+            <input type="text" placeholder="Enter Username" name="username" class="js-username" required>
           </div>
           <br>
           <div>
@@ -65,66 +65,74 @@ function hotelSubmit()
             <input type="text" placeholder="Enter Email" name="email" class="js-email" required>
           </div>
           <br>
-          <div>
+           <div>
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" class="js-password" required>
+            <input type="password" placeholder="Enter Password" name="psw" class="js-password" value required>
+           </div>
+
+            <button type="button" id="cancel" class="js-signup">Cancel</button>
+            <button type="button" id="signup" class="js-signup">Sign Up</button>
           </div>
-          <br>
-          <br>
-          <br>
-          <button type="button" id="cancel" class="js-signup">Cancel</button>
-          <button type="button" id="signup" class="js-signup">Sign Up</button>
-        </div>
-    </form>`)
+          </form>`)
 
-    $('button').click(function(event)
-     {
-       event.preventDefault();
-       userSubmit = $(event.currentTarget).attr('id');
-       if(userSubmit=='signup')
+
+      $('button').click(function(event)
        {
-         console.log('in js-signup');
+          event.preventDefault();
+          userSubmit = $(event.currentTarget).attr('id');
 
-         firstName = $('.js-fname').val();
-         lastName = $('.js-lname').val();
-         userName = $('.js-username').val();
-         email    = $('.js-email').val();
-         password = $('.js-password').val();
-
-         xhr = new XMLHttpRequest();
-         var url = '/restaurants';
-         xhr.open("POST", url, true);
-         xhr.setRequestHeader("Content-type", "application/json");
-
-         xhr.onreadystatechange = function()
-        {
-          if (xhr.readyState == 4)
+          if(userSubmit=='signup')
           {
-           authToken = JSON.parse(xhr.responseText);
-          // console.log(authToken);
+
+            firstName = $('.js-fname').val();
+            lastName = $('.js-lname').val();
+            userName = $('.js-username').val();
+            email    = $('.js-email').val();
+            password = $('.js-password').val();
+
+            if(firstName == ''|| lastName == '' || userName == '' || email == ''||password == '')
+            {
+             alert('Please fill all the fields');
+            }
+            else
+            {
+              console.log('in js-signup');
+              xhr = new XMLHttpRequest();
+              var url = '/restaurants';
+              xhr.open("POST", url, true);
+              xhr.setRequestHeader("Content-type", "application/json");
+
+              xhr.onreadystatechange = function()
+              {
+                if (xhr.readyState == 4)
+                {
+                  authToken = JSON.parse(xhr.responseText);
+             // console.log(authToken);
+                }
+              }
+            var data = JSON.stringify
+            ({
+
+              'firstName': `${firstName}`,
+              'lastName': `${lastName}`,
+              'userName': `${userName}`,
+              'email':     `${email}`,
+              'password':`${password}`
+            })
+
+            xhr.send(data);
+
+            $('.js-form').html('');
+            navigationBar();
           }
-        }
-       var data = JSON.stringify(
+       }//signup
+       if(userSubmit=='cancel')
        {
-         'firstName': `${firstName}`,
-         'lastName': `${lastName}`,
-         'userName': `${userName}`,
-         'email':     `${email}`,
-         'password':`${password}`
-       })
-       xhr.send(data);
-
-      $('.js-form').html('');
-        navigationBar();
-    }
-   if(userSubmit=='cancel')
-    {
-       console.log('In cancel')
-       $('.js-form').html('');
-       $('.js-form').html(`<p> <h2>No problem! You can sign up later <h2></p>`)
-
-    }
-   }) //button event
+         console.log('In cancel')
+         $('.js-form').html('');
+         $('.js-form').html(`<p> <h2>No problem! You can sign up later <h2></p>`)
+       }
+    }) //button event
   }//if new user
   else
   { /*login form*/
@@ -135,7 +143,7 @@ function hotelSubmit()
          <p><h2>Enter your username and password</h2></p>
 
           <label for="username"><b>Username<b></label>
-          <input type="text" name="username" class="js-username" required>
+          <input type="text" placeholder="Enter Username" name="username" class="js-username" required>
          <br>
 
          <label for="psw"><b>Password</b></label>
@@ -155,30 +163,37 @@ function hotelSubmit()
       userName = $('.js-username').val();
       password = $('.js-password').val();
 
-      /*Make a post request to post username and password*/
-      xhr = new XMLHttpRequest();
-      var url = '/api/auth/login';
-      xhr.open("POST", url, true);
-      xhr.setRequestHeader("Content-type", "application/json");
-      xhr.onreadystatechange = function()
-     {
-       if (xhr.readyState == 4)
-       {
-         authToken = JSON.parse(xhr.responseText);
-         console.log(authToken);
-        }
+      if(userName == ''||password == '')
+      {
+       alert('Please fill all the fields');
       }
-      var data = JSON.stringify(
+
+     else
+     {
+       /*Make a post request to post username and password*/
+       xhr = new XMLHttpRequest();
+       var url = '/api/auth/login';
+       xhr.open("POST", url, true);
+       xhr.setRequestHeader("Content-type", "application/json");
+       xhr.onreadystatechange = function()
+      {
+        if (xhr.readyState == 4)
         {
-          'userName':`${userName}`,
-          'password':`${password}`
-        })
+          authToken = JSON.parse(xhr.responseText);
+          console.log(authToken);
+         }
+       }
+       var data = JSON.stringify(
+         {
+           'userName':`${userName}`,
+           'password':`${password}`
+         })
 
-      xhr.send(data);
-      navigationBar();
-
+       xhr.send(data);
+       navigationBar();
+     }
       //cityIdSearch();
-   })//buttonclick
+    })//buttonclick
   }//else
 }//redirectUse
 
@@ -188,10 +203,10 @@ function navigationBar()
   $('.js-form').html('');
   $('.js-nav').html(`<p><h2> Welcome ${userName}! You can search for restaurants or view your current favorites</h2></p>
 
-  <div class="tab">
-     <button class="tablinks" id = "home">Logout</button>
-     <button class="tablinks" id = "search">Restaurant Search</button>
-     <button class="tablinks" id = "favorites">View Favorites</button>
+  <div class="tab row">
+     <button class="col-4" id = "home">Logout</button>
+     <button class="col-4" id = "search">Restaurant Search</button>
+     <button class="col-4" id = "favorites">View Favorites</button>
   </div>
  `);
 
@@ -206,12 +221,12 @@ function navigationBar()
    $(className).html('');
    $('.js-nav').html('');
    $('.js-form').html('');
-   $('.js-homepage').html(`<div class="js-homepage homepage">
+   $('.js-homepage').html(`<div>
       <h3>Are you hungry and are not sure where to eat?Look no further!<br>
        Begin your search by either signing in or signing up
      </h3>
 
-      <form class="js-homepage">
+      <form>
         <button id="new" role="button" type="submit">Sign Up</button>
         <button id="existing" role="button"  type="submit">Sign In</button>
       </form>
@@ -261,8 +276,10 @@ function navigationBar()
          className = '.js-search-results-'+column;
 
          $('.js-form').html('');
+         $('.js-next').html('');
+         $('.js-prev').html('');
          $(className).append(
-           `<div class="favorites">
+           `<div class="favorites col-4">
             <br>
              <ul>
               <h2>${fav.resName}</h2>
@@ -270,7 +287,6 @@ function navigationBar()
               <h5>${fav.resCuisines}</h5>
               <h5>${fav.resRating}</h5>
               <h5>${fav.resRatingText}</h5>
-              <a href="${fav.resUrl}" target="_blank"><h5>More Info</h5></a>
            </ul>
            </div>
           </div>`
@@ -390,7 +406,8 @@ function displayData(data)
   $('.js-search-results-1').html('');
   $('.js-search-results-2').html('');
 
-  console.log(data);
+  //console.log(data);
+  console.log(data.restaurants.length);
   data.restaurants.forEach(restaurant =>
   {
     resName = `${restaurant.restaurant.name}`;
@@ -434,12 +451,11 @@ function displayData(data)
           <br>
           <ul>
             <h2>${restaurant.restaurant.name}</h2>
-            <a href="${restaurant.restaurant.url}" target="_blank"><img src="${restaurant.restaurant.thumb}" target="_blank"</img></a>
+            <a href="${restaurant.restaurant.url} " target="_blank"><img src="${restaurant.restaurant.thumb}" target="_blank"></a>
             <h5>${restaurant.restaurant.cuisines}</h5>
             <h5>${restaurant.restaurant.user_rating.aggregate_rating}</h5>
             <h5>${restaurant.restaurant.user_rating.rating_text}</h5>
-            <a href="${restaurant.restaurant.url}" target="_blank"><h5>More Info</h5></a>
-            <button type="button" id="${restaurant.restaurant.R.res_id}" class="js-favorite"> Mark as Favorite!</button>
+            <button id="${restaurant.restaurant.R.res_id}" class="js-favorite fav">Fav</button>
           </ul>
         </div>
       `);
@@ -449,8 +465,15 @@ function displayData(data)
     $('.js-favorite').on('click',function(event)
     {
         var favorite = $(event.currentTarget).attr('id');
+        console.log(favorite);
+        var targetFav = $(event.currentTarget);
+        var otherFavs = $('.js-favorite').not(targetFav);
+
+        otherFavs.removeClass('fav-on');
+        targetFav.toggleClass('fav-on');
+
         if(favorites.length==0)
-       {
+        {
           console.log('first favorite restaurant');
 
            restaurantInfo.forEach(restaurant =>
@@ -487,7 +510,7 @@ function displayData(data)
              'locationType':`${entity}`,
              'restaurantInfo': favorites
             })
-
+          console.log(data);
           xhr.send(data);
        }//if
        else
@@ -546,9 +569,12 @@ function displayData(data)
      }
 
    //Each page will have a 'Next' button
+   if(data.restaurants.length >=6)
+   {
     $('.js-next').html(`<br><br><button id="next" role="button" type="submit">Next</button>`)
+   }
 
-    if(startIndex == 0)
+   if(startIndex == 0)
     {
      $('.js-prev').html('');
     }
@@ -558,7 +584,7 @@ function displayData(data)
 $('.js-next').on('click','#next',function(event)
 {
   event.preventDefault();
- startIndex = startIndex+counter;
+  startIndex = startIndex+counter;
   nextResultSet();
 })
 
