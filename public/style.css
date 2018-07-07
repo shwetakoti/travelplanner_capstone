@@ -3,15 +3,44 @@ body * {
   font-family: 'Roboto', sans-serif;
 }
 
-.tab {
-    overflow: hidden;
-    width: 750px;
-    position: relative;
-    margin-left:50px;
-    margin-top:60px;
-    display: inline-block;
+.app-container {
+    height: 30vh;
+    min-height: 18em;
+    background-image: url(https://image.freepik.com/free-photo/wooden-planks-with-blurred-restaurant-background_1253-56.jpg);
+    background-size: cover;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    background-position: 70% 30%;
+    color: #fff;
+    margin:auto;
 }
 
+.logo-container {
+    background: #303030;
+    text-align: center;
+}
+
+.app-callout {
+    font-size: 2.2em;
+    text-align:center;
+}
+
+.tab {
+    overflow: hidden;
+    width: 100%;
+    margin-top:60px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+.formtab {
+  overflow: hidden;
+  width: 100%;
+  margin-top:60px;
+  display: inline-block;
+
+}
 /* Style the buttons inside the tab */
 .tab button {
     background-color: inherit;
@@ -29,17 +58,6 @@ body * {
     background-color: #ddd;
 }
 
-.like-btn {
-    position: absolute;
-    display: inline-block;
-    background:url(twitter-heart.png);
-    width: 60px;
-    height: 60px;
-    background-size: 2900%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
-
 .fav {
   font-size: 25px;
 }
@@ -49,21 +67,24 @@ body * {
 }
 
 body {
-  background: url(http://www.trollfacequest4.net/p/2018/03/restaurant-menu-background-11-background-check-all-with-restaurant-menu-background.jpg) no-repeat;
-  background-size: cover;
+  /*background: #E8E6E5;*/
   color: black;
   text-align: center;
  }
+
+img{
+  height:70px;
+  width:100px;
+}
 
 input {
   height: 30px;
   width:  200px;
   font-size: 18px;
   border-radius: 4px;
-  display: inline-block;
   margin: 8px 0;
-  margin-left:10px;
-  position:relative;
+  margin-left:auto;
+  padding:0;
 }
 
 select {
@@ -74,7 +95,6 @@ select {
   display: inline-block;
   margin: 8px 0;
   margin-left:2px;
-
 }
 
 label {
@@ -84,24 +104,26 @@ label {
 .signup {
     border-radius: 5px;
     background-color: #f2f2f2;
+    margin:auto;
     height: 400px;
-    width:  300px;
-    text-align: center;
-    display: inline-block;
-    margin: 8px 0;
+}
+
+p{
+  text-align:center;
 }
 
 form {
   height: 500px;
   width : 500px;
-  display: inline-block;
-  margin-top: 75px;
+  margin: auto;
+  text-align:center;
 }
 
 h3{
   text-align:center;
-  margin-left:75px;
-  position:relative;
+  margin:auto;
+  line-height: 145%;
+  margin-top:50px;
 }
 
 button {
@@ -109,18 +131,21 @@ button {
   font-size: 18px;
   font-weight: bolder;
   border-radius: 4px;
+  cursor: pointer;
 }
 
+button:hover {
+    background-color: #ddd;
+}
+
+.container {
+  display:inline-block;
+  text-align:center;
+}
 .favorites {
-  position:relative;
-  display : inline-block;
+  margin-left:300px;
   text-align: center;
   margin : auto;
-  margin-left :150px;
-}
-
-h3 {
- margin-top:50px
 }
 
 a {
@@ -137,6 +162,17 @@ a {
 .nav-buttons{
   float :right;
   display:inline-block;
+}
+
+.demo-login .demo-login__title {
+    font-weight: 900;
+    padding: 0;
+    margin: 0 auto 1em;
+}
+
+.demo-login p, .demo-login span {
+    padding: 0;
+    margin: .5em 0;
 }
 .hover:hover{
   background-color:#E9967A;
