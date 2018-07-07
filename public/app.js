@@ -40,40 +40,38 @@ function hotelSubmit()
    /*If user is new,then redirect them to signup form page, otherwise redirect them to login form page*/
    if(userType == 'new')
    {
+     //$('.js-header').html('');
      $('.js-homepage').html('');
+     $('.js-header').html(`<header>
+                             <div class="logo-container">
+                               <img src="https://thumbs.dreamstime.com/z/restaurant-logo-12230326.jpg" </img>
+                               </div>
+                           </header>`);
      $('.js-form').html(`
-       <form>
+       <div class="row">
+        <form class="col-12">
          <p><h2>Please fill this form to create an account</h2></p>
          <div class="signup">
-           <div>
              <label for="fname"><b>First Name<b></label>
-             <input type="text"  placeholder="Enter Firstname" name="fname" class="js-fname" required>
-           </div>
-          <br>
-           <div>
+             <input type="text"  placeholder="Enter Firstname" name="fname" class="js-fname" required/>
+            <br>
             <label for="lname"><b>Last Name<b></label>
-            <input type="text" placeholder="Enter Lastname" name="lname" class="js-lname" required>
-           </div>
-          <br>
-          <div>
+            <input type="text" placeholder="Enter Lastname" name="lname" class="js-lname" required/>
+            <br>
             <label for="username"><b>Username<b></label>
-            <input type="text" placeholder="Enter Username" name="username" class="js-username" required>
-          </div>
-          <br>
-          <div>
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" class="js-email" required>
-          </div>
-          <br>
-           <div>
+            <input type="text" placeholder="Enter Username" name="username" class="js-username" required/>
+            <br>
+             <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="email" class="js-email" required/>
+           <br>
             <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" class="js-password" value required>
-           </div>
-
-            <button type="button" id="cancel" class="js-signup">Cancel</button>
+            <input type="password" placeholder="Enter Password" name="psw" class="js-password" value required/>
+            <br>
+             <button type="button" id="cancel" class="js-signup">Cancel</button>
             <button type="button" id="signup" class="js-signup">Sign Up</button>
-          </div>
-          </form>`)
+         </div>
+        </form>
+      </div>`)
 
 
       $('button').click(function(event)
@@ -136,23 +134,35 @@ function hotelSubmit()
   }//if new user
   else
   { /*login form*/
+    $('.js-header').html('');
     $('.js-homepage').html('');
+    $('.js-header').html(`<div class="logo-container">
+                                <img src="https://thumbs.dreamstime.com/z/restaurant-logo-12230326.jpg" </img>
+                              </div>
+                        `);
     $('.js-form').html(`
-      <form>
-        <div>
-         <p><h2>Enter your username and password</h2></p>
+      <div class="row">
+        <h2>Enter your username and password</h2>
+            <br>
+           <form class="col-12">
+            <label for="username"><b>Username<b></label>
+            <input type="text" placeholder="Enter Username" name="username" class="js-username" required>
+             <br>
 
-          <label for="username"><b>Username<b></label>
-          <input type="text" placeholder="Enter Username" name="username" class="js-username" required>
-         <br>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" class="js-password" required>
+             <br>
 
-         <label for="psw"><b>Password</b></label>
-         <input type="password" placeholder="Enter Password" name="psw" class="js-password" required>
-         <br>
+            <button type="button" id="login" class="js-login">Login</button>
+           </form>
 
-         <button type="button" id="login" class="js-login">Login</button>
-       </div>
-   </form>`)
+           <div class="demo-login">
+             <p class="demo-login_title"> Try it out:</p>
+             <p> <span> username:demoUser</span></p>
+             <p> <span> password:demoPassword</span></p>
+           </div>
+    </div>
+    `)
 
    $('button').click(function(event)
     {
@@ -201,16 +211,79 @@ function navigationBar()
 {
 /*New or existing users can navigate between logout, restaurant search and view favorites page*/
   $('.js-form').html('');
-  $('.js-nav').html(`<p><h2> Welcome ${userName}! You can search for restaurants or view your current favorites</h2></p>
-
-  <div class="tab row">
-     <button class="col-4" id = "home">Logout</button>
-     <button class="col-4" id = "search">Restaurant Search</button>
-     <button class="col-4" id = "favorites">View Favorites</button>
+  $('.js-nav').html(`
+  <div class="row">
+   <div class="tab">
+     <div class="col-4">
+       <button id = "home">Logout</button>
+     </div>
+     <div class="col-4">
+       <button id = "search">Restaurant Search</button>
+     </div>
+     <div class="col-4">
+       <button id = "favorites">View Favorites</button>
+     </div>
   </div>
  `);
 
+ cityIdSearch() ;
+
  $('#home').click(function(event)
+ {
+   //event.preventDefault();
+
+   $('.js-search-results-0').html('');
+   $('.js-search-results-1').html('');
+   $('.js-search-results-2').html('');
+   $('.js-next').html('');
+   $('.js-prev').html('');
+   $('.js-fav').html('');
+   $('.js-nav').html('');
+   $('.js-form').html('');
+   $('.js-header').html(`
+     <header>
+          <div class="logo-container">
+            <img src="https://thumbs.dreamstime.com/z/restaurant-logo-12230326.jpg" </img>
+          </div>
+         <section class="js-container app-container">
+            <div class="app-callout">
+                <h1>Find your favorites</h1>
+            </div>
+         </section>
+
+    </header>
+
+
+   <div class="row">
+     <section class="js-homepage">
+       <div class="col-12">
+           <h3>Are you hungry?<br>
+               Search your favorite restaurants by signing in or signing up
+           </h3>
+           <br>
+           <br>
+          <button id="new" role="button" type="submit">Sign Up</button>
+          <button id="existing" role="button" type="submit">Sign In</button>
+
+       </div>
+     </section>
+  </div>
+`)
+
+  $('button').click(function(event)
+   {
+      event.preventDefault();
+
+      userType = $(event.currentTarget).attr('id');
+      console.log(`${userType}`);
+
+  /*redirectUser function checks if user is new or existing user and based on that makes request to endpoints*/
+     redirectUser(userType);
+   })
+
+})
+
+$('#search').click(function(event)
  {
    event.preventDefault();
 
@@ -219,30 +292,8 @@ function navigationBar()
    $('.js-search-results-2').html('');
    $('.js-next').html('');
    $(className).html('');
-   $('.js-nav').html('');
-   $('.js-form').html('');
-   $('.js-homepage').html(`<div>
-      <h3>Are you hungry and are not sure where to eat?Look no further!<br>
-       Begin your search by either signing in or signing up
-     </h3>
-
-      <form>
-        <button id="new" role="button" type="submit">Sign Up</button>
-        <button id="existing" role="button"  type="submit">Sign In</button>
-      </form>
-  </div>`)
-})
-
-
- $('#search').click(function(event)
- {
-   event.preventDefault();
-
-   $('.js-search-results-0').html('');
-   $('.js-search-results-1').html('');
-   $('.js-search-results-2').html('');
-    $('.js-next').html('');
-   $(className).html('');
+   $('.js-fav').html('');
+   $('.js-prev').html('');
    cityIdSearch();
  })
 
@@ -278,19 +329,20 @@ function navigationBar()
          $('.js-form').html('');
          $('.js-next').html('');
          $('.js-prev').html('');
-         $(className).append(
-           `<div class="favorites col-4">
-            <br>
-             <ul>
-              <h2>${fav.resName}</h2>
-              <a href="${fav.resUrl}" target="_blank"><img src="${fav.resThumb}" target="_blank"</img></a>
-              <h5>${fav.resCuisines}</h5>
-              <h5>${fav.resRating}</h5>
-              <h5>${fav.resRatingText}</h5>
-           </ul>
+         $('.js-fav').append(
+           `<div class="row">
+             <div class="col-12">
+              <br>
+               <ul>
+                <h2>${fav.resName}</h2>
+                <a href="${fav.resUrl}" target="_blank"><img src="${fav.resThumb}" target="_blank"</img></a>
+                <h5>${fav.resCuisines}</h5>
+                <h5>${fav.resRating}</h5>
+                <h5>${fav.resRatingText}</h5>
+              </ul>
            </div>
-          </div>`
-          );
+          </div> `
+          )
       }) //.each
      }
    }
@@ -304,26 +356,26 @@ function cityIdSearch()
     console.log('in restaurant search');
 
     $('.js-form').html(`
-       <form class="js-locationForm location">
+      <div class="row">
+       <form class="col-12 js-locationForm form-tab">
+          <br>
+           <label for="city"><b>Enter City<b></label>
+           <input type="text" name="city" class="js-city" required/>
+           <br>
+           <label><b>Entity Type<b></label>
+           <input type="text" name="city" value="city"  class="location" required/>
+           <br>
+           <br>
 
-         <label for="city"><b>Enter City  <b></label>
-         <input type="text" name="city" class="js-city">
-         <br>
-         <label><b>Location Type</label>
-         <select id="location">
-             <option value="city">City</option>
-             <option value="subzone">Subzone</option>
-             <option value="zone">Zone</option>
-             <option value="landmark">Landmark</option>
-             <option value="metro">Metro</option>
-             <option value="group">Group</option>
-        </select>
-        <br>
-        <br>
-        <input type="submit" id="submit" class="js-submit"></input>
-        <br>
-        <br>
-        </form>
+           <button id="submit" class="js-submit" role="button" type="submit">Submit</button>
+           <br>
+           <br>
+       </form>
+
+       <div class="demo-login">
+         <p> <span> Demo City:seattle</span></p>
+       </div>
+    </div>
       `)
 
       $('.js-locationForm').submit(event =>
@@ -332,7 +384,8 @@ function cityIdSearch()
         console.log('I am inside restaurantsearch/location')
         const queryTarget = $(event.currentTarget).find('.js-city');
         city = queryTarget.val();
-        entity = $("#location").val();
+        //entity = $('.location').val();
+        entity = 'city';
         // clear out the input
         console.log(`${entity}`);
         queryTarget.val("");
@@ -450,11 +503,10 @@ function displayData(data)
       ` <div>
           <br>
           <ul>
-            <h2>${restaurant.restaurant.name}</h2>
+            <h3>${restaurant.restaurant.name}</h3>
             <a href="${restaurant.restaurant.url} " target="_blank"><img src="${restaurant.restaurant.thumb}" target="_blank"></a>
-            <h5>${restaurant.restaurant.cuisines}</h5>
-            <h5>${restaurant.restaurant.user_rating.aggregate_rating}</h5>
-            <h5>${restaurant.restaurant.user_rating.rating_text}</h5>
+            <h4>${restaurant.restaurant.cuisines}</h4>
+            <h4>${restaurant.restaurant.user_rating.aggregate_rating}</h4>
             <button id="${restaurant.restaurant.R.res_id}" class="js-favorite fav">Fav</button>
           </ul>
         </div>
