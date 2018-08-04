@@ -127,80 +127,80 @@ let {firstName = '',lastName = '',userName,email = '', password} = req.body;
 
 router.get('/viewfavorites/:userName',jsonParser,jwtAuth,(req,res) =>
 {
-   console.log("In viewFavorites:"+ req.params.userName);
-   restaurants.findOne(
-        {
-          'userName' : req.params.userName
-        }
-      )
-  .then(
-    restaurant => res.status(200).json(restaurant))
-  .catch(err => {
-    console.log(err) ;
-    res.status(500).json({ message: 'Something went wrong' })
-  })
+  console.log("In viewFavorites:"+ req.params.userName);
+
+  restaurants
+   .findOne({userName:req.params.userName})
+   .then(
+    restaurant => {
+      console.log("this is the:"+ restaurant);
+      res.status(200).json(restaurant)
+    })
+    .catch(err => {
+     console.error(err);
+     res.status(500).json({ error: 'something went terribly wrong' });
+   });
 })
 
 //POST request to post userId,username and restaurantIds
 router.post('/favorites',jsonParser,(req,res) =>
 {
-  console.log(req.body);
-  restaurants.create({
-         userName: req.body.userName,
-         city: req.body.city,
-         locationType: req.body.locationType,
-         restaurantInfo: req.body.restaurantInfo
-      })
-  //  .then(user => res.status(201).json(user.serialize()))
-    .then(restaurant => res.status(201).json(restaurant.serialize()))
+  /*console.log(req.body);
+
+  //restaurants.find({userName:req.body.userName})
+    //           .then(restaurant => {
+                   console.log(restaurant);
+                  // if(restaurant.length>0)
+                  //     {
+                         console.log(req.body.userName);
+                         console.log(req.body.restaurantInfo);
+                         console.log("not first restaurant");
+                         var updatedRestaurant = {};
+                         updatedRestaurant = req.body.restaurantInfo;
+                         console.log(updatedRestaurant);
+                         restaurants.update({userName:req.body.userName},{ $set: {restaurantInfo: updatedRestaurant}},{upsert:true});
+                         console.log("after update");
+                    //    }
+                  /* else {
+                      console.log("this is the first restaurant");
+                      restaurants.create({userName: req.body.userName,
+                      restaurantInfo: req.body.restaurantInfo})
+                   }*/  //else
+            //})*/
+    /*.then(restaurant => res.status(201).json(restaurant))
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'Something went wrong' });
-    });
-  })
+    });*/
+var updatedRestaurant = {};
+
+restaurants.update({userName:req.body.userName},{$push: {restaurantInfo: req.body.restaurantInfo}},{upsert:true})
+.then(restaurant => res.status(201).json(restaurant))
+.catch(err => {
+  console.error(err);
+  res.status(500).json({ error: 'Something went wrong' });
+});
+}); //post
+
 
 //Update/Add restaurantIds
- router.put('/favorites/:id',jsonParser,(req,res) =>
+ router.put('/favorites/:userName',jsonParser,(req,res) =>
   {
-    console.log(req.params.id);
-  /*  console.log(req.body.userId);
-    if(!(req.params.id && req.body.userId && req.params.id === req.body.userId))
-    {
-      res.status(400).json({
-        error: 'Request path id and request body id values must match'
-      });
-    }*/
+    restaurants.update({userName:req.params.userName},{ $push :
+                                        {
+                                          restaurantInfo:req.body.restaurantInfo
+                                        }
+                                      },)
 
-   const updateRestaurantIds = [];
-    for(let i=0;i<req.body.restaurantInfo.length;i++)
-    {
-      updateRestaurantIds.push(req.body.restaurantInfo[i]);
-    }
-     console.log(updateRestaurantIds);
-     restaurants
-    .replaceOne( {userName:req.body.userName},
-                 { userName:req.body.userName,
-                   city: req.body.city,
-                  locationType: req.body.locationType,
-                  restaurantInfo:updateRestaurantIds } )
-    .then(updatedRestaurant => res.status(204).end())
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({ message: 'Something went wrong' })
-    });
-  })
+                .then(updatedRestaurant => res.status(204).end())
+                  .catch(err => {
+                    console.log(err);
+                    res.status(500).json({ message: 'Something went wrong' })
+                  });
 
-/*  router.delete('/:id', (req, res) => {
-    restaurants
-      .findByIdAndRemove(req.params.id)
-      .then(() => {
-        console.log(`Deleted object with id \`${req.params.id}\``);
-        res.status(204).end();
-      });
-  });*/
+  });
 
-
-  router.use('*', function (req, res) {
+ router.use('*', function (req, res) {
     res.status(404).json({ message: 'Not Found' });
   });
 
