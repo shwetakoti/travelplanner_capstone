@@ -113,7 +113,7 @@ describe('Restaurants API resource', function() {
 
 
 
-  describe('POST endpoint', function() {
+  /*describe('POST endpoint', function() {
     // strategy: make a POST request with data,
     // then prove that the restaurant we get back has
     // right keys, and that `id` is there (which means
@@ -135,7 +135,7 @@ describe('Restaurants API resource', function() {
         //  expect(res.body.locationType).to.equal(newRestaurant.locationType);
         })
      });
-  });
+  });*/
 
   describe('GET endpoint', function() {
 
@@ -190,3 +190,4 @@ describe('Restaurants API resource', function() {
     });
   });
 });
+
