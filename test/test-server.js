@@ -79,8 +79,6 @@ function generateRestaurantInfo(){
 function generateRestaurantData() {
 return {
     userName : generateUserName(),
-    city : generateCity(),
-    locationType : generateLocationType(),
     restaurantInfo : generateRestaurantInfo(),
  }
 }
@@ -133,8 +131,8 @@ describe('Restaurants API resource', function() {
           expect(res.body.userName).to.equal(newRestaurant.userName);
           // cause Mongo should have created id on insertion
           expect(res.body.id).to.not.be.null;
-          expect(res.body.city).to.equal(newRestaurant.city);
-          expect(res.body.locationType).to.equal(newRestaurant.locationType);
+          //expect(res.body.city).to.equal(newRestaurant.city);
+        //  expect(res.body.locationType).to.equal(newRestaurant.locationType);
         })
      });
   });
