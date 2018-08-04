@@ -35,8 +35,9 @@ router.post('/login',(req,res,err) => {
        console.log(user);
        if(!user)
        {
+         res.json('Invalid User') ;
          return Promise.reject({
-            reason: 'LoginError',
+           reason: 'LoginError',
             message: 'Incorrect username or Password'
          })
        }
@@ -45,6 +46,7 @@ router.post('/login',(req,res,err) => {
       if(!isValid)
       {
         console.log('Invalid password');
+        res.json('Invalid password') ;
       }
       else
        {
