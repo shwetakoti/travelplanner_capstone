@@ -22,8 +22,6 @@ const restaurantSchema = mongoose.Schema
 ({
 
     userName:String,
-    city: String,
-    locationType: String,
     restaurantInfo: Array,
     created: {type: Date, default: Date.now}
 
@@ -41,9 +39,7 @@ restaurantSchema.methods.serialize = function()
 {
   return{
       userName : this.userName,
-      city : this.city ,
-      locationType : this.locationType,
-      restaurantIds : this.restaurantIds
+      restaurantInfo : this.restaurantInfo
     }
 }
 
