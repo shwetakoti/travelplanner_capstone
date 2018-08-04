@@ -10,7 +10,8 @@ let password;
 let cityId;
 let className
 let restaurantInfo = [];
-let favorites = []
+//let favorites = [];
+let favorites_ids = [];
 let resId,resName,resUrl,resCuisines,resRating,resRatingText,resThumb;
 let userId ;
 let restaurant
@@ -28,7 +29,7 @@ function hotelSubmit()
     event.preventDefault();
 
     userType = $(event.currentTarget).attr('id');
-    console.log(`${userType}`);
+    //console.log(`${userType}`);
 
     /*redirectUser function checks if user is new or existing user and based on that makes request to endpoints*/
     redirectUser(userType);
@@ -94,7 +95,7 @@ function hotelSubmit()
             }
             else
             {
-              console.log('in js-signup');
+              //console.log('in js-signup');
               xhr = new XMLHttpRequest();
               var url = '/restaurants';
               xhr.open("POST", url, true);
@@ -105,7 +106,6 @@ function hotelSubmit()
                 if (xhr.readyState == 4)
                 {
                   authToken = JSON.parse(xhr.responseText);
-             // console.log(authToken);
                 }
               }
             var data = JSON.stringify
@@ -119,14 +119,13 @@ function hotelSubmit()
             })
 
             xhr.send(data);
-
-            $('.js-form').html('');
             navigationBar();
+            $('.js-form').html('');
           }
        }//signup
        if(userSubmit=='cancel')
        {
-         console.log('In cancel')
+         //console.log('In cancel')
          $('.js-form').html('');
          $('.js-form').html(`<p> <h2>No problem! You can sign up later <h2></p>`)
        }
@@ -148,14 +147,11 @@ function hotelSubmit()
             <label for="username"><b>Username<b></label>
             <input type="text" placeholder="Enter Username" name="username" class="js-username" required>
              <br>
-
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" class="js-password" required>
              <br>
-
             <button type="button" id="login" class="js-login">Login</button>
            </form>
-
            <div class="demo-login">
              <p class="demo-login_title"> Try it out:</p>
              <p> <span> username:demoUser</span></p>
@@ -168,7 +164,7 @@ function hotelSubmit()
     {
       event.preventDefault();
       userSubmit = $(event.currentTarget).attr('id');
-      console.log('in js-login');
+      //console.log('in js-login');
 
       userName = $('.js-username').val();
       password = $('.js-password').val();
@@ -177,7 +173,6 @@ function hotelSubmit()
       {
        alert('Please fill all the fields');
       }
-
      else
      {
        /*Make a post request to post username and password*/
@@ -186,22 +181,32 @@ function hotelSubmit()
        xhr.open("POST", url, true);
        xhr.setRequestHeader("Content-type", "application/json");
        xhr.onreadystatechange = function()
-      {
+       {
         if (xhr.readyState == 4)
         {
           authToken = JSON.parse(xhr.responseText);
           console.log(authToken);
+
+          if(authToken == 'Invalid user' || authToken == 'Invalid password')
+          {
+            console.log('I am in if of authtoken');
+            alert('Invalid User or Password') ;
+          }
+          else
+          {
+            navigationBar();
+          }
          }
        }
-       var data = JSON.stringify(
+      var data = JSON.stringify(
          {
            'userName':`${userName}`,
            'password':`${password}`
          })
 
        xhr.send(data);
-       navigationBar();
-     }
+       //navigationBar();
+      }
       //cityIdSearch();
     })//buttonclick
   }//else
@@ -250,10 +255,7 @@ function navigationBar()
                 <h1>Find your favorites</h1>
             </div>
          </section>
-
     </header>
-
-
    <div class="row">
      <section class="js-homepage">
        <div class="col-12">
@@ -264,7 +266,6 @@ function navigationBar()
            <br>
           <button id="new" role="button" type="submit">Sign Up</button>
           <button id="existing" role="button" type="submit">Sign In</button>
-
        </div>
      </section>
   </div>
@@ -275,7 +276,7 @@ function navigationBar()
       event.preventDefault();
 
       userType = $(event.currentTarget).attr('id');
-      console.log(`${userType}`);
+    //  console.log(`${userType}`);
 
   /*redirectUser function checks if user is new or existing user and based on that makes request to endpoints*/
      redirectUser(userType);
@@ -309,6 +310,7 @@ $('#search').click(function(event)
 
    xhr = new XMLHttpRequest();
    var url = '/restaurants/viewfavorites/'+`${userName}`
+   console.log(url);
    console.log(authToken);
 
    xhr.open("GET", url, true);
@@ -353,7 +355,7 @@ $('#search').click(function(event)
 
 function cityIdSearch()
  {
-    console.log('in restaurant search');
+    //console.log('in restaurant search');
 
     $('.js-form').html(`
       <div class="row">
@@ -366,12 +368,10 @@ function cityIdSearch()
            <input type="text" name="city" value="city"  class="location" required/>
            <br>
            <br>
-
            <button id="submit" class="js-submit" role="button" type="submit">Submit</button>
            <br>
            <br>
        </form>
-
        <div class="demo-login">
          <p> <span> Demo City:seattle</span></p>
        </div>
@@ -381,7 +381,7 @@ function cityIdSearch()
       $('.js-locationForm').submit(event =>
       {
         event.preventDefault();
-        console.log('I am inside restaurantsearch/location')
+    //    console.log('I am inside restaurantsearch/location')
         const queryTarget = $(event.currentTarget).find('.js-city');
         city = queryTarget.val();
         //entity = $('.location').val();
@@ -408,13 +408,12 @@ function cityIdSearch()
           success: function(data)
            {
               let i ;
-              console.log(data.location_suggestions);
+            //  console.log(data.location_suggestions);
               $.each(data.location_suggestions,function(i,location)
               {
-               console.log(`${location.id}`);
+            //   console.log(`${location.id}`);
                cityId = `${location.id}`;
                })
-
                restaurantSearch(cityId);
            }
          }
@@ -459,21 +458,31 @@ function displayData(data)
   $('.js-search-results-1').html('');
   $('.js-search-results-2').html('');
 
-  //console.log(data);
-  console.log(data.restaurants.length);
+  console.log(data);
+  //console.log(data.restaurants.length);
   data.restaurants.forEach(restaurant =>
   {
-    resName = `${restaurant.restaurant.name}`;
-    resUrl = `${restaurant.restaurant.url}`;
-    resId = `${restaurant.restaurant.R.res_id}`;
-    resThumb = `${restaurant.restaurant.thumb}`;
-    resCuisines = `${restaurant.restaurant.cuisines}`;
-    resRating = `${restaurant.restaurant.user_rating.aggregate_rating}`;
-    resRatingText = `${restaurant.restaurant.user_rating.rating_text}` ;
-
-    console.log('Inside displaydata');
-    console.log(resThumb);
-    console.log(restaurant.restaurant.cuisines);
+    if(`${restaurant.restaurant.thumb}` == '')
+    {
+      restaurant.restaurant.thumb = 'https://b.zmtcdn.com/data/res_imagery/16717505_RESTAURANT_addd402222df15d1f857e1647969b5f4_c.jpg?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A';
+      resName = `${restaurant.restaurant.name}`;
+      resUrl = `${restaurant.restaurant.url}`;
+      resId = `${restaurant.restaurant.R.res_id}`;
+      resThumb = `${restaurant.restaurant.thumb}`;
+      resCuisines = `${restaurant.restaurant.cuisines}`;
+      resRating = `${restaurant.restaurant.user_rating.aggregate_rating}`;
+      resRatingText = `${restaurant.restaurant.user_rating.rating_text}` ;
+    }
+   else
+    {
+      resName = `${restaurant.restaurant.name}`;
+      resUrl = `${restaurant.restaurant.url}`;
+      resId = `${restaurant.restaurant.R.res_id}`;
+      resThumb = `${restaurant.restaurant.thumb}`;
+      resCuisines = `${restaurant.restaurant.cuisines}`;
+      resRating = `${restaurant.restaurant.user_rating.aggregate_rating}`;
+      resRatingText = `${restaurant.restaurant.user_rating.rating_text}` ;
+    }
 
     restaurantInfo.push({
        resId : `${resId}`,
@@ -487,17 +496,11 @@ function displayData(data)
   })
 
 
-
   $.each(data.restaurants,function(i,restaurant)
   {
      var column = Math.floor(i/2);
      console.log('this is column'+column);
      var className = '.js-search-results-'+column;
-     console.log(restaurant.restaurant.thumb);
-     console.log(restaurant.restaurant.cuisines);
-     console.log(restaurant.restaurant.user_rating.aggregate_rating);
-     console.log(restaurant.restaurant.user_rating.rating_text);
-
 
      $(className).append(
       ` <div>
@@ -513,26 +516,24 @@ function displayData(data)
       `);
   }) //.each
 
+$('.js-favorite').on('click',function(event)
+{
+    var favorite = $(event.currentTarget).attr('id');
+    var favorites = [];
+    console.log(favorite);
+    var targetFav = $(event.currentTarget);
+    var otherFavs = $('.js-favorite').not(targetFav);
 
-    $('.js-favorite').on('click',function(event)
-    {
-        var favorite = $(event.currentTarget).attr('id');
-        console.log(favorite);
-        var targetFav = $(event.currentTarget);
-        var otherFavs = $('.js-favorite').not(targetFav);
+    otherFavs.removeClass('fav-on');
+    targetFav.toggleClass('fav-on');
 
-        otherFavs.removeClass('fav-on');
-        targetFav.toggleClass('fav-on');
+    restaurantInfo.forEach(restaurant =>
+       {
+         if(favorite == restaurant.resId)
+         {
+           favorites_ids.push(restaurant.resId);
 
-        if(favorites.length==0)
-        {
-          console.log('first favorite restaurant');
-
-           restaurantInfo.forEach(restaurant =>
-           {
-             if(favorite == restaurant.resId)
-             {
-                favorites.push(
+           favorites.push(
                  {
                    resId : restaurant.resId,
                    resName : restaurant.resName,
@@ -542,78 +543,33 @@ function displayData(data)
                    resRatingText : restaurant.resRatingText ,
                    resUrl : restaurant.resUrl
                  })
-              }
-           })
-            xhr = new XMLHttpRequest();
-            var url = '/restaurants/favorites';
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.onreadystatechange = function()
-            {
-              if (xhr.readyState == 4)
-              {
-                var json = JSON.parse(xhr.responseText);
-              }
-            }
-           var data = JSON.stringify(
-           {
-             'userName':`${userName}`,
-             'city':`${city}`,
-             'locationType':`${entity}`,
-             'restaurantInfo': favorites
-            })
-          console.log(data);
-          xhr.send(data);
-       }//if
-       else
-       {
-          console.log('Not first favorite restaurant');
 
-          restaurantInfo.forEach(restaurant =>
-          {
-            if(favorite == restaurant.resId)
-            {
-              favorites.push(
-                {
-                  resId : restaurant.resId,
-                  resName : restaurant.resName,
-                  resThumb : restaurant.resThumb,
-                  resCuisines : restaurant.resCuisines,
-                  resRating : restaurant.resRating,
-                  resRatingText : restaurant.resRatingText ,
-                  resUrl : restaurant.resUrl
-                })
+             xhr = new XMLHttpRequest();
+             var url = '/restaurants/favorites';
+             xhr.open("POST", url, true);
+             xhr.setRequestHeader("Content-type", "application/json");
+             xhr.onreadystatechange = function()
+             {
+               if (xhr.readyState == 4)
+               {
+                 var json = JSON.parse(xhr.responseText);
+               }
              }
-          })
+             var data = JSON.stringify(
+             {
+               'userName':`${userName}`,
+               'restaurantInfo': favorites
+              })
+            console.log(data);
+            xhr.send(data);
 
-
-         /*make a PUT request*/
-          xhr = new XMLHttpRequest();
-          var url = '/restaurants/favorites/'+`${userId}`;
-          xhr.open("PUT", url, true);
-          xhr.setRequestHeader("Content-type", "application/json");
-          xhr.onreadystatechange = function()
-          {
-            if (xhr.readyState == 4)
-            {
-              var json = xhr.responseText;
-
-            }
           }
-         var data = JSON.stringify(
-         {
-           'userName' : `${userName}`,
-           'city':`${city}`,
-           'locationType':`${entity}`,
-           'restaurantInfo': favorites
-         })
-         console.log(data);
-        xhr.send(data);
-       }
-    })//button click
 
+      })
 
-   //Except first page, all other pages will have have a 'previous' button along with 'next' button
+  }) //button click
+
+    //Except first page, all other pages will have have a 'previous' button along with 'next' button
     if(startIndex > 0)
      {
        $('.js-prev').html(`<br><br><button id="prev" role="button" type="submit">Previous</button>`)
@@ -650,7 +606,7 @@ $('.js-prev').on('click','#prev',function(event)
 //Event handler when user clicks 'Next' button
 function nextResultSet()
 {
-  console.log('I am in nextResultSet'+startIndex) ;
+  //console.log('I am in nextResultSet'+startIndex) ;
   const settings =
    {
      url: 'https://developers.zomato.com/api/v2.1/search',
@@ -668,8 +624,7 @@ function nextResultSet()
      },
      dataType: 'json',
      type: 'GET',
-    success: displayData
-
+     success: displayData
    }
    $.ajax(settings);
  }
@@ -695,8 +650,8 @@ function prevResultSet()
     success: displayData
   };
   $.ajax(settings);
-  console.log('In prevResultSet');
-  console.log(settings);
+//  console.log('In prevResultSet');
+//  console.log(settings);
 }
 //callback function to start the app
 $(hotelSubmit);
