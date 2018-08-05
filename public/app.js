@@ -187,7 +187,7 @@ function hotelSubmit()
           authToken = JSON.parse(xhr.responseText);
           console.log(authToken);
 
-          if(authToken == 'Invalid user' || authToken == 'Invalid password')
+          if(authToken == 'Invalid User' || authToken == 'Invalid password')
           {
             console.log('I am in if of authtoken');
             alert('Invalid User or Password') ;
